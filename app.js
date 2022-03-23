@@ -1,23 +1,60 @@
-document.querySelector('.player-chunk-prev').addEventListener('click', () => {
-    const moveClass = (className, activeClassName) => {
-        let active = document.querySelector(`.${activeClassName}`);
-        let prev = active.previousElementSibling;
-        if (prev && prev.classList.contains(className)) {
-            active.classList.remove(activeClassName);
-            prev.classList.add(activeClassName);
-        }
+// Глобальные переменные =================
+const prevStorySwitcher = document.querySelector('.player-chunk-prev');
+const nextStorySwitcher = document.querySelector('.player-chunk-next');
+let timer;
+
+// =======================================
+
+// Функции ===============================
+const moveClass = (className, method, pred) => {
+    const active = document.querySelector(`.${className}`);
+    if (pred && !pred(active)) {
+        return;
     }
-    moveClass('timeline-chunk', 'timeline-chunk-active');
-    moveClass('player-chunk', 'player-chunk-active');
-});
-document.querySelector('.player-chunk-next').addEventListener('click', () => {
-    const moveClass = (className) => {
-        let active = document.querySelector(`.${className}`);
-        if (active.nextElementSibling) {
-            active.classList.remove(className);
-            active.nextElementSibling.classList.add(className);
-        }
+    if (active[method]) {
+        active.classList.remove(className);
+        active[method].classList.add(className);
+        return active;
     }
-    moveClass('timeline-chunk-active');
-    moveClass('player-chunk-active');
+    return null;
+};
+
+const next = () => {
+    moveClass('player-chunk-active', 'nextElementSibling');
+    const el = moveClass('timeline-chunk-active', 'nextElementSibling');
+    if (el) {
+        el.querySelector('.timeline-chunk-inner').style.width = '';
+    }
+};
+
+const runInterval = (time, step) => {
+    clearInterval(timer);
+    timer = setInterval(() => {
+        const active = document.querySelector('.timeline-chunk-active').querySelector('.timeline-chunk-inner');
+        const w = parseFloat(active.style.width) || 0;
+        if (w === 100) {
+            next();
+            return;
+        }
+        active.style.width = w + step + '%';
+
+    }, time * 1000 * step / 100);
+};
+
+// ======================================
+
+prevStorySwitcher.addEventListener('click', () => {
+    const prev = moveClass('timeline-chunk-active', 'previousElementSibling', el => {
+        const inner = el.querySelector('.timeline-chunk-inner');
+        const w = parseFloat(inner.style.width) || 0;
+        el.querySelector('.timeline-chunk-inner').style.width = '';
+        return w <= 30;
+    });
+    if (prev) {
+        moveClass('player-chunk-active', 'previousElementSibling');
+    }
 });
+
+nextStorySwitcher.addEventListener('click', next);
+
+runInterval(5, 1);
