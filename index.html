@@ -5,23 +5,13 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Основы плеера</title>
-    <link rel="stylesheet" href="./style.css">
-    <script src="./app.js"></script>
+    <title>Плеер Stories</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="player/library.css">
+    <script src="player/library.js" defer></script>
+    <script src="index.js" defer></script>
 </head>
 <body>
     <div class="my-player"></div>
-    <script>
-        initPlayer({
-            target: '.my-player',
-            slides: [
-                {url: 'img/chunk-1.jpg', alt: 'slide1'},
-                {url: 'img/chunk-2.jpg', alt: 'slide2'},
-                {url: 'img/chunk-3.jpg', alt: 'slide3'},
-                {url: 'img/chunk-4.jpg', alt: 'slide4'},
-            ],
-            delayPerSlide: 5,
-        })
-    </script>
 </body>
 </html>
